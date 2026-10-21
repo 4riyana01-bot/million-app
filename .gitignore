@@ -1,0 +1,7 @@
+.firebase/
+firebase-debug.log
+firestore-debug.log
+functions/node_modules/
+functions/.runtimeconfig.json
+functions/.secret.local
+/million/

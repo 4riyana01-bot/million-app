@@ -9,7 +9,10 @@
   const nameInput = document.querySelector('#account-name');
   const emailInput = document.querySelector('#account-email');
   const passwordInput = document.querySelector('#account-password');
+  const codeField = document.querySelector('#account-code-field');
+  const codeInput = document.querySelector('#account-code');
   const submitButton = document.querySelector('#account-email-submit');
+  const resendCodeButton = document.querySelector('#account-resend-code');
   const modeToggle = document.querySelector('#account-mode-toggle');
   const googleButton = document.querySelector('#account-google');
   const appleButton = document.querySelector('#account-apple');
@@ -22,6 +25,8 @@
   let user = null;
   let premium = false;
   let creatingAccount = true;
+  let codeSent = false;
+  let functions = null;
 
   function stopPlayback() {
     const video = document.querySelector('#video-player');
@@ -43,20 +48,30 @@
       'auth/weak-password': 'وشەیا نهێنی پێدڤییە لانیکەم ٨ پیت بیت.',
       'auth/invalid-credential': 'ئیمەیڵ یان وشەیا نهێنی نەراستە.',
       'auth/user-disabled': 'ئەڤ هەژمارە ناچالاکە.',
-      'auth/too-many-requests': 'هەوڵ زۆر هاتن؛ کەمێک چاوەڕێ بکە و جارەکا دی تاقی بکە.'
+      'auth/too-many-requests': 'هەوڵ زۆر هاتن؛ کەمێک چاوەڕێ بکە و جارەکا دی تاقی بکە.',
+      'functions/invalid-argument': 'زانیاری یان کۆد نەراستە، یان کۆد کۆتایی هاتییە.',
+      'functions/already-exists': 'ئەڤ ئیمەیڵە پێشتر هەژمارەکا هەیە؛ بچۆ ژوور.',
+      'functions/resource-exhausted': 'داواکاری زۆر بوو؛ کەمێک چاوەڕێ بکە و جارەکا دی تاقی بکە.',
+      'functions/not-found': 'سێرڤەرێ کۆدێ پشتڕاستکرنێ نەهاتییە چالاککرن.',
+      'functions/unavailable': 'پەیوەندییا سێرڤەرێ نەهاتییە؛ دواتر جارەکا دی تاقی بکە.'
     };
     status.textContent = messages[error.code] || `چوونەژوور نەسەرکەفت: ${error.message || 'هەڵەیەکا نەناسراو.'}`;
   }
 
   function updateMode() {
+    codeSent = false;
+    codeField.hidden = true;
+    resendCodeButton.hidden = true;
+    codeInput.required = false;
+    codeInput.value = '';
     nameField.hidden = !creatingAccount;
     nameInput.required = creatingAccount;
     nameInput.autocomplete = creatingAccount ? 'name' : 'off';
     passwordInput.autocomplete = creatingAccount ? 'new-password' : 'current-password';
     passwordInput.minLength = creatingAccount ? 8 : 0;
-    submitButton.textContent = creatingAccount ? 'هەژمارا نوی دروست بکە' : 'بچۆ ژوور';
+    submitButton.textContent = creatingAccount ? 'کۆدی پشتڕاستکرنێ بنێرە' : 'بچۆ ژوور';
     modeToggle.textContent = creatingAccount ? 'هەژمارا تە هەیە؟ بچۆ ژوور' : 'هەژمارا تە نینە؟ هەژمارا نوی دروست بکە';
-    status.textContent = creatingAccount ? 'ب ناڤ، ئیمەیڵ و وشەیا نهێنی هەژمارا خۆ دروست بکە.' : 'ب ئیمەیڵ و وشەیا نهێنی بچۆ ژوور.';
+    status.textContent = creatingAccount ? 'ناڤ، ئیمەیڵ و وشەیا نهێنی بنڤیسە؛ کۆدی پشتڕاستکرنێ بۆ ئیمەیڵێ تە دێ هێت.' : 'ب ئیمەیڵ و وشەیا نهێنی بچۆ ژوور.';
   }
 
   function updateProfile(userInfo) {
@@ -133,6 +148,17 @@
     updateMode();
   });
 
+  emailInput.addEventListener('input', () => {
+    if (!codeSent) return;
+    codeSent = false;
+    codeField.hidden = true;
+    resendCodeButton.hidden = true;
+    codeInput.required = false;
+    codeInput.value = '';
+    submitButton.textContent = 'کۆدێ پشتڕاستکرنێ بنێرە';
+    status.textContent = 'ئیمەیڵ گوهۆڕا؛ بۆ ڤی ئیمەیڵی کۆدەکا نوی بخوازە.';
+  });
+
   emailForm.addEventListener('submit', async event => {
     event.preventDefault();
     if (!auth) {
@@ -142,8 +168,8 @@
     const email = emailInput.value.trim();
     const password = passwordInput.value;
     const name = nameInput.value.trim();
-    if (!email || !password || (creatingAccount && !name)) {
-      status.textContent = 'تکایە هەمی خانە پێدڤییەکان پڕ بکە.';
+    if (!email || (creatingAccount && (!password || !name || (codeSent && !/^\d{6}$/.test(codeInput.value.trim()))))) {
+      status.textContent = codeSent ? 'کۆدی ٦ ژمارەیی بنڤیسە.' : 'تکایە هەمی خانە پێدڤییەکان پڕ بکە.';
       return;
     }
     submitButton.disabled = true;
@@ -151,15 +177,24 @@
     appleButton.disabled = true;
     try {
       if (creatingAccount) {
-        const credential = await auth.createUserWithEmailAndPassword(email, password);
-        await credential.user.updateProfile({ displayName: name });
-        await credential.user.reload();
-        user = auth.currentUser;
-        updateProfile(user);
-        const token = await user.getIdTokenResult(true);
-        premium = token.claims.premium === true;
-        document.querySelector('#account-entitlement').textContent = premium ? 'اشتراک چالاکە' : 'اشتراک چالاک نینە';
-        status.textContent = 'هەژمار بە سەرکەفتی دروست کرا.';
+        if (!codeSent) {
+          await functions.httpsCallable('requestEmailSignupCode')({ email });
+          codeSent = true;
+          codeField.hidden = false;
+          resendCodeButton.hidden = false;
+          codeInput.required = true;
+          submitButton.textContent = 'کۆد پشتڕاست بکە و هەژمار دروست بکە';
+          status.textContent = 'کۆدی ٦ ژمارەیی بۆ ئیمەیڵێ تە هات. کۆدەکە بنڤیسە.';
+          codeInput.focus();
+          return;
+        }
+        await functions.httpsCallable('completeEmailSignup')({
+          email,
+          code: codeInput.value.trim(),
+          name,
+          password
+        });
+        await auth.signInWithEmailAndPassword(email, password);
       } else {
         await auth.signInWithEmailAndPassword(email, password);
       }
@@ -174,7 +209,20 @@
     }
   });
 
-  if (!configured || !window.firebase || !firebase.auth) {
+  resendCodeButton.addEventListener('click', async () => {
+    resendCodeButton.disabled = true;
+    try {
+      await functions.httpsCallable('requestEmailSignupCode')({ email: emailInput.value.trim() });
+      codeInput.value = '';
+      status.textContent = 'کۆدەکا نوی بۆ ئیمەیڵێ تە هات؛ پۆستا ژ نوو بپشکنە.';
+    } catch (error) {
+      showError(error);
+    } finally {
+      resendCodeButton.disabled = false;
+    }
+  });
+
+  if (!configured || !window.firebase || !firebase.auth || !firebase.functions) {
     setupNote.textContent = 'بۆ چالاککرنا دروستکرنا هەژمارێ و چوونەژوورێ، Firebase ل firebase-config.js ڕێک بخە.';
     emailForm.querySelectorAll('input,button').forEach(control => { control.disabled = true; });
     googleButton.disabled = true;
@@ -184,7 +232,8 @@
     try {
       if (!firebase.apps.length) firebase.initializeApp(config);
       auth = firebase.auth();
-      setupNote.textContent = 'Firebase پەیوەندی کرا. بۆ Google/Apple، domain ـێ سەرەکی ل Firebase Authorized domains زێدە بکە.';
+      functions = firebase.app().functions('us-central1');
+      setupNote.textContent = 'بۆ هەژمارا ئیمەیڵی، کۆدەکا ٦ ژمارەیی دەنێردرێت؛ backend ـی Firebase و Resend پێدڤییە چالاک بن.';
       googleButton.addEventListener('click', () => signIn(new firebase.auth.GoogleAuthProvider()));
       const apple = new firebase.auth.OAuthProvider('apple.com');
       apple.addScope('email');

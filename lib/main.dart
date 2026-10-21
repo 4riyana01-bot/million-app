@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -442,7 +443,10 @@ class _MillionHomeState extends State<MillionHome> {
     final name = TextEditingController();
     final email = TextEditingController();
     final password = TextEditingController();
+    final verificationCode = TextEditingController();
     var creatingAccount = true;
+    var codeSent = false;
+    var working = false;
     String? error;
     await showDialog<void>(
       context: context,
@@ -488,30 +492,90 @@ class _MillionHomeState extends State<MillionHome> {
                       if (creatingAccount)
                         TextField(controller: name, textCapitalization: TextCapitalization.words, decoration: const InputDecoration(labelText: 'ناڤ و نازناڤ')),
                       const SizedBox(height: 8),
-                      TextField(controller: email, keyboardType: TextInputType.emailAddress, autofillHints: const [AutofillHints.email], decoration: const InputDecoration(labelText: 'ئیمەیڵ')),
+                      TextField(
+                        controller: email,
+                        keyboardType: TextInputType.emailAddress,
+                        autofillHints: const [AutofillHints.email],
+                        onChanged: (_) {
+                          if (codeSent) update(() { codeSent = false; verificationCode.clear(); error = 'ئیمەیڵ گوهۆڕا؛ کۆدەکا نوی بخوازە.'; });
+                        },
+                        decoration: const InputDecoration(labelText: 'ئیمەیڵ'),
+                      ),
                       const SizedBox(height: 8),
                       TextField(controller: password, obscureText: true, autofillHints: [creatingAccount ? AutofillHints.newPassword : AutofillHints.password], decoration: const InputDecoration(labelText: 'وشەیا نهێنی · لانیکەم ٨ پیت')),
+                      if (creatingAccount && codeSent) ...[
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: verificationCode,
+                          keyboardType: TextInputType.number,
+                          autofillHints: const [AutofillHints.oneTimeCode],
+                          maxLength: 6,
+                          decoration: const InputDecoration(labelText: 'کۆدی ٦ ژمارەیی ژ ئیمەیڵێ'),
+                        ),
+                        TextButton(
+                          onPressed: working ? null : () async {
+                            update(() { working = true; error = null; });
+                            try {
+                              await FirebaseFunctions.instanceFor(region: 'us-central1').httpsCallable('requestEmailSignupCode').call({'email': email.text.trim()});
+                              verificationCode.clear();
+                              update(() => error = 'کۆدەکا نوی بۆ ئیمەیڵێ تە هات.');
+                            } on FirebaseFunctionsException catch (exception) {
+                              update(() => error = exception.message ?? 'کۆدەکا نوی نەهاتە ناردن؛ کەمێک چاوەڕێ بکە.');
+                            } finally {
+                              if (dialogContext.mounted) update(() => working = false);
+                            }
+                          },
+                          child: const Text('کۆدێ نوی بخوازە'),
+                        ),
+                      ],
                       if (error != null) Padding(padding: const EdgeInsets.only(top: 8), child: Text(error!, style: const TextStyle(color: Colors.redAccent))),
                       const SizedBox(height: 8),
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton(
-                          onPressed: !DefaultFirebaseOptions.isConfigured ? null : () async {
+                          onPressed: !DefaultFirebaseOptions.isConfigured || working ? null : () async {
                             final cleanEmail = email.text.trim();
-                            if (cleanEmail.isEmpty || password.text.length < 8 || (creatingAccount && name.text.trim().isEmpty)) {
+                            if (cleanEmail.isEmpty || (creatingAccount && (password.text.length < 8 || name.text.trim().isEmpty))) {
                               update(() => error = 'تکایە ناڤ، ئیمەیڵ و وشەیا نهێنی یا دروست بنڤیسە.');
                               return;
                             }
+                            update(() { working = true; error = null; });
                             try {
                               UserCredential credential;
                               if (creatingAccount) {
-                                credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: cleanEmail, password: password.text);
-                                await credential.user!.updateDisplayName(name.text.trim());
+                                final functions = FirebaseFunctions.instanceFor(region: 'us-central1');
+                                if (!codeSent) {
+                                  await functions.httpsCallable('requestEmailSignupCode').call({'email': cleanEmail});
+                                  update(() {
+                                    codeSent = true;
+                                    error = 'کۆدی ٦ ژمارەیی بۆ ئیمەیڵێ تە هات؛ کۆدەکە بنڤیسە و دووبارە دابگرە.';
+                                  });
+                                  return;
+                                }
+                                if (!RegExp(r'^\d{6}$').hasMatch(verificationCode.text.trim())) {
+                                  update(() => error = 'کۆدی ٦ ژمارەیی بنڤیسە.');
+                                  return;
+                                }
+                                await functions.httpsCallable('completeEmailSignup').call({
+                                  'email': cleanEmail,
+                                  'code': verificationCode.text.trim(),
+                                  'name': name.text.trim(),
+                                  'password': password.text,
+                                });
+                                credential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: cleanEmail, password: password.text);
                               } else {
                                 credential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: cleanEmail, password: password.text);
                               }
                               await _refreshAccount(credential.user);
                               if (dialogContext.mounted) Navigator.pop(dialogContext);
+                            } on FirebaseFunctionsException catch (exception) {
+                              update(() => error = switch (exception.code) {
+                                'invalid-argument' => 'کۆد یان زانیاری نەراستە، یان کۆد کۆتایی هاتییە.',
+                                'already-exists' => 'ئەڤ ئیمەیڵە پێشتر هەژمارەکا هەیە؛ بچۆ ژوور.',
+                                'resource-exhausted' => 'هەوڵ زۆر بوو؛ کەمێک چاوەڕێ بکە و جارەکا دی تاقی بکە.',
+                                'not-found' => 'سێرڤەرێ کۆدێ پشتڕاستکرنێ نەهاتییە چالاککرن.',
+                                _ => exception.message ?? 'چوونەژوورێ ب سێرڤەرێ نەسەرکەفت.',
+                              });
                             } on FirebaseAuthException catch (exception) {
                               update(() => error = switch (exception.code) {
                                 'email-already-in-use' => 'ئەڤ ئیمەیڵە پێشتر هەژمارەکا هەیە؛ بچۆ ژوور.',
@@ -522,13 +586,15 @@ class _MillionHomeState extends State<MillionHome> {
                               });
                             } catch (exception) {
                               update(() => error = 'هەڵە ل دروستکرنا هەژمارێ: $exception');
+                            } finally {
+                              if (dialogContext.mounted) update(() => working = false);
                             }
                           },
-                          child: Text(creatingAccount ? 'هەژمارا نوی دروست بکە' : 'بچۆ ژوور'),
+                          child: Text(creatingAccount ? (codeSent ? 'کۆد پشتڕاست بکە و هەژمار دروست بکە' : 'کۆدێ پشتڕاستکرنێ بنێرە') : 'بچۆ ژوور'),
                         ),
                       ),
                       TextButton(
-                        onPressed: () => update(() { creatingAccount = !creatingAccount; error = null; }),
+                        onPressed: () => update(() { creatingAccount = !creatingAccount; codeSent = false; verificationCode.clear(); error = null; }),
                         child: Text(creatingAccount ? 'هەژمارا تە هەیە؟ بچۆ ژوور' : 'هەژمارا تە نینە؟ هەژمارا نوی دروست بکە'),
                       ),
                       OutlinedButton.icon(
@@ -560,6 +626,7 @@ class _MillionHomeState extends State<MillionHome> {
     name.dispose();
     email.dispose();
     password.dispose();
+    verificationCode.dispose();
   }
 
   Future<void> _toggleSaved(MediaItem item) async {

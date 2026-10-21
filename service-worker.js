@@ -1,4 +1,4 @@
-const CACHE_NAME='million-shell-v30';
+const CACHE_NAME='million-shell-v31';
 const APP_FILES=['./','./index.html','./styles.css','./rtl.css','./player.css','./speda.css','./streaming.css','./app.js','./account-auth.js','./manifest.webmanifest','./icon.svg','./assets/fonts/Speda-Bold.ttf'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_FILES)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));

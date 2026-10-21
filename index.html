@@ -233,7 +233,9 @@
           <label id="account-name-field">ناڤ و نازناڤ<input id="account-name" name="name" type="text" maxlength="80" autocomplete="name" placeholder="ناڤێ تە"></label>
           <label>ئیمەیڵ<input id="account-email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="name@example.com" required></label>
           <label>وشەیا نهێنی<input id="account-password" name="password" type="password" minlength="8" autocomplete="new-password" placeholder="لانیکەم ٨ پیت" required></label>
-          <button class="account-signin" id="account-email-submit" type="submit">هەژمارا نوی دروست بکە</button>
+          <label id="account-code-field" hidden>کۆدی ٦ ژمارەیی<input id="account-code" name="code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" placeholder="کۆدێ ناردی بۆ ئیمەیڵێ تە"></label>
+          <button class="account-signin" id="account-email-submit" type="submit">کۆدی پشتڕاستکرنێ بنێرە</button>
+          <button class="account-mode-toggle" id="account-resend-code" type="button" hidden>کۆدێ نوی بنێرە</button>
         </form>
         <button class="account-mode-toggle" id="account-mode-toggle" type="button">هەژمارا تە هەیە؟ بچۆ ژوور</button>
         <button class="account-signin" id="account-google" type="button">ب Google / Gmail بچۆ ژوور</button>
@@ -273,6 +275,7 @@
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-functions-compat.js"></script>
   <script src="firebase-config.js"></script>
   <script src="app.js"></script>
   <script src="account-auth.js"></script>
