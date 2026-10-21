@@ -1,0 +1,14 @@
+﻿{
+  "name": "MILLION | فلم و دراما",
+  "short_name": "MILLION",
+  "description": "فلم و دراما ب بادینی دهۆک",
+  "lang": "kmr-Arab-IQ",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0c11",
+  "theme_color": "#0b0c11",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
+

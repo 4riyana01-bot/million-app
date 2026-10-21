@@ -1,0 +1,2 @@
+#video-player{width:100%;max-height:62vh;background:#050506;margin:8px 0 15px;border-radius:5px}#video-player[hidden]{display:none}.episode-row small{white-space:nowrap}
+#video-player{display:block}.source-hint{color:#bcae8f!important;font-size:10px!important;margin:8px 0 13px!important}.source-hint[hidden]{display:none}

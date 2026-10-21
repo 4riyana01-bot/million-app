@@ -1,0 +1,281 @@
+﻿<!doctype html>
+<html lang="kmr-Arab-IQ" dir="rtl">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101a29">
+  <meta name="description" content="MILLION — پەنجەرەیەک بۆ جیهانا فلم و دراما.">
+  <meta name="robots" content="index,follow">
+  <meta name="application-name" content="MILLION">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MILLION">
+  <meta property="og:title" content="MILLION — فلم و دراما">
+  <meta property="og:description" content="MILLION — پەنجەرەیەک بۆ جیهانا فلم و دراما.">
+  <meta property="og:locale" content="ku_IQ">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="MILLION — فلم و دراما">
+  <meta name="twitter:description" content="MILLION — پەنجەرەیەک بۆ جیهانا فلم و دراما.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>MILLION — فلم و دراما</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="rtl.css">
+  <link rel="stylesheet" href="player.css">
+  <link rel="stylesheet" href="speda.css">
+  <link rel="stylesheet" href="streaming.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" data-home><span class="brand-mark">M</span><span>MILLION<span
+          class="brand-dot">.</span></span></a>
+    <nav class="main-nav" aria-label="مێنیویا سەرەکی"><a class="nav-item active" href="#home"
+        data-view="home">سەرەتایێ</a><a class="nav-item" href="#drama" data-view="drama">دراما</a><a class="nav-item"
+        href="#films" data-view="films">فلم</a><a class="nav-item" href="#new" data-view="new">تازەهاتین</a><a
+        class="nav-item" href="#saved" data-view="saved">بژاردەیێن من</a></nav>
+    <div class="top-actions"><label class="search-box"><span>⌕</span><input id="search" type="search"
+          placeholder="لێگەڕین بۆ فلم و دراما…" aria-label="لێگەڕیان"><kbd>⌘ K</kbd></label><button class="profile-chip"
+        id="profile-open" aria-label="پڕۆفایلێ تە"><span class="avatar" id="profile-avatar" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg></span><span
+          id="profile-name">ئەڤینەرێ سینەمایێ</span><span class="profile-caret">⌄</span></button></div>
+  </header>
+  <main class="main-content" id="home">
+    <section class="hero" id="hero">
+      <div class="hero-image" id="hero-image"></div>
+      <div class="hero-shade"></div><button class="hero-arrow hero-prev" id="hero-prev"
+        aria-label="فلمێ پێشتر">‹</button><button class="hero-arrow hero-next" id="hero-next"
+        aria-label="فلمێ پاشتر">›</button>
+      <div class="hero-copy">
+        <div class="hero-kicker"><span class="live-dot"></span>پێشنیارا MILLION بۆ ڤێ ھەفتیێ</div>
+        <h1 id="hero-title">ل نێڤ<br><em>بێدەنگیێدا.</em></h1>
+        <p id="hero-description">گەشتەکا جوان و هێدی ل نێڤ بیرەوەری، دووری و ئەو پەیڤێن نەهاتییە گۆتن.</p>
+        <div class="hero-meta"><span id="hero-year">٢٠٢٤</span><i></i><span id="hero-genre">دراما</span><i></i><span
+            id="hero-duration">٢ سەعات و ٨ خولەک</span><i></i><span class="rating">★ <b id="hero-rating">8.7</b></span>
+        </div>
+        <div class="hero-buttons"><button class="button button-light" id="hero-details"><span>▶</span>
+            سەیرکرن</button><button class="button button-ghost" id="hero-save">♡ <span>زێدەکرن بۆ
+              بژاردەیان</span></button></div>
+      </div>
+      <div class="hero-pagination" id="hero-pagination"></div>
+      <div class="hero-caption"><span class="caption-text">پێشنیارەکا تایبەت ژ MILLION</span></div>
+    </section>
+
+    <div id="home-sections">
+      <section class="content-section" id="continue-section">
+        <div class="section-head">
+          <div>
+            <h2>بەردەوامبوون ل سەیرکرنێ</h2>
+            <p class="section-subtitle">ژ وێرێ بەردەوام بە.</p>
+          </div>
+          <div class="row-arrows"><button data-scroll="continue-row" aria-label="پاشتر">‹</button><button
+              data-scroll="continue-row" data-dir="next" aria-label="پێشتر">›</button></div>
+        </div>
+        <div class="continue-row poster-row" id="continue-row"></div>
+      </section>
+      <section class="content-section">
+        <div class="section-head">
+          <div>
+            <h2>فلمێن بەلڤبووی</h2>
+            <p class="section-subtitle">ئێستا خەڵک چ دبینن؟</p>
+          </div><a class="text-link" href="#films" data-view="films">هەمی فلم ببینە ←</a>
+        </div>
+        <div class="poster-row" id="trending-row"></div>
+      </section>
+      <section class="content-section">
+        <div class="section-head">
+          <div>
+            <h2>دراما و زنجیرەیێن نوی</h2>
+            <p class="section-subtitle">چیرۆکێن تازە بۆ تامەکرنێ.</p>
+          </div><a class="text-link" href="#drama" data-view="drama">هەمی دراما ببینە ←</a>
+        </div>
+        <div class="poster-row" id="new-row"></div>
+      </section>
+      <section class="content-section">
+        <div class="section-head">
+          <div>
+            <h2>جۆرێن بەلڤ</h2>
+            <p class="section-subtitle">جۆرەکێ هەلبژێرە و لێگەڕیانێ بکە.</p>
+          </div>
+        </div>
+        <div class="genre-row" id="genre-row"></div>
+      </section>
+      <section class="content-section">
+        <div class="section-head">
+          <div>
+            <h2>فلمێن خەڵات‌وەرگرتی</h2>
+            <p class="section-subtitle">هەلبژارتەیێن کو ل بیر دکەڤن.</p>
+          </div>
+          <div class="row-arrows"><button data-scroll="award-row" aria-label="پاشتر">‹</button><button
+              data-scroll="award-row" data-dir="next" aria-label="پێشتر">›</button></div>
+        </div>
+        <div class="poster-row" id="award-row"></div>
+      </section>
+    </div>
+
+    <section class="content-section live-page" id="live-page" hidden>
+      <div class="live-heading"><span class="live-emblem">●</span>
+        <div><span class="eyebrow gold">MILLION · LIVE</span>
+          <h2>پەخشا ڕاستەوخۆ</h2>
+          <p>کاناڵێن لایڤ ل ڤێرێ دێ دەرکەڤن.</p>
+        </div>
+      </div>
+      <div class="live-notice"><span>ⓘ</span>
+        <p>بۆ دەستپێکرنا پەخشێ، لینکا ڤیدیۆیێ یا مۆڵەتپێدراو پێدڤییە. چ کاناڵێن لایڤ هێشتا نەهاتینە زیادکرن.</p>
+      </div>
+      <div class="live-grid">
+        <article class="live-channel">
+          <div class="channel-logo news-logo">M<span>NEWS</span></div>
+          <div><strong>MILLION NEWS</strong><small>هەواڵ · پەخشا ڕاستەوخۆ</small></div><span class="live-badge">لینک
+            پێدڤیە</span>
+        </article>
+        <article class="live-channel">
+          <div class="channel-logo sport-logo">M<span>SPORT</span></div>
+          <div><strong>MILLION SPORT</strong><small>وەرزش · پەخشا ڕاستەوخۆ</small></div><span class="live-badge">لینک
+            پێدڤیە</span>
+        </article>
+        <article class="live-channel">
+          <div class="channel-logo drama-logo">M<span>DRAMA</span></div>
+          <div><strong>MILLION DRAMA</strong><small>دراما · پەخشا ڕاستەوخۆ</small></div><span class="live-badge">لینک
+            پێدڤیە</span>
+        </article>
+      </div>
+    </section>
+    <section class="content-section settings-page" id="settings-page" hidden>
+      <div class="settings-heading">
+        <div><span class="eyebrow gold">MILLION · SETTINGS</span>
+          <h2>ڕێکخستنێن بەرنامێ</h2>
+          <p>ڕەنگ و زانیاریێن پەیوەندیێ ڕێک بخە.</p>
+        </div>
+        <div class="settings-heading-mark">⚙</div>
+      </div>
+      <div class="settings-options"><label class="settings-option"><span
+            class="option-icon">◐</span><span><strong>شێوازی ڕوون / تاریک</strong><small id="theme-label">شێوازی
+              تاریک</small></span><input id="theme-toggle" type="checkbox"
+            aria-label="گۆڕینا شێوازی ڕوون و تاریک"></label><label class="settings-option language-option"><span
+            class="option-icon">文</span><span><strong>زمان / Language</strong><small>کوردی، عەرەبی،
+              English</small></span><select id="language-select" aria-label="Language">
+            <option value="ku">کوردی</option>
+            <option value="ar">العربية</option>
+            <option value="en">English</option>
+          </select></label><button class="settings-option" id="subscription-open" type="button"><span
+            class="option-icon">★</span><span><strong>اشتراکەکان</strong><small>پلانێک هەڵبژێرە بۆ
+              دەستگەیشتن</small></span><span class="option-arrow">‹</span></button><button class="settings-option"
+          id="contact-open"><span class="option-icon">✉</span><span><strong>پەیوەندی ب MILLION</strong><small>پەیامەک بۆ
+              تیمێ بنێرە</small></span><span class="option-arrow">‹</span></button><button class="settings-option"
+          id="privacy-open"><span class="option-icon">◈</span><span><strong>پاراستنا نهێنیێ</strong><small>زانیاریێن تە
+              چەوا دهێن پاراستن</small></span><span class="option-arrow">‹</span></button></div>
+      <div id="subscription-panel" class="subscription-panel" hidden></div>
+    </section>
+    <section class="content-section browse-section" id="catalog" hidden>
+      <div class="section-head">
+        <div>
+          <div class="eyebrow gold" id="browse-kicker">MILLION</div>
+          <h2 id="section-title">فلمان</h2>
+          <p class="section-subtitle" id="section-subtitle"></p>
+        </div>
+      </div>
+      <div class="filters" id="filters"><button class="filter active" data-genre="All">هەمی</button><button
+          class="filter" data-genre="Drama">دراما</button><button class="filter"
+          data-genre="Thriller">تریلەر</button><button class="filter" data-genre="Sci-Fi">زانستی</button><button
+          class="filter" data-genre="Documentary">بەلگەنامەیی</button><button class="filter"
+          data-genre="Romance">ئەڤین</button><span class="result-count" id="result-count"></span></div>
+      <div class="settings-list" id="settings-list" hidden></div>
+      <div class="movie-grid" id="movie-grid"></div>
+      <div class="empty-state" id="empty-state" hidden>
+        <div>⌕</div>
+        <h3>چ ناڤەرۆک نەهاتە دیتن</h3>
+        <p>پەیڤەکێ دی یان جۆرەکێ دی تاقی بکە.</p><button class="button button-ghost" id="reset-search">لێگەڕیانێ
+          ژێببە</button>
+      </div>
+    </section>
+    <footer><span class="brand-small">MILLION<span>.</span></span><span>بۆ ئەوێن چیرۆکەکا جوان ژ دل دکەن.</span><span>©
+        2025 MILLION</span></footer>
+  </main>
+  <nav class="bottom-nav" aria-label="مێنیوی سەرەکی">
+    <a class="bottom-item active" href="#home" data-view="home"><span class="bottom-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3.5 10 8.5-7 8.5 7"/><path d="M5.5 9v11h13V9M9.5 20v-7h5v7"/></svg></span><span>سەرەتایێ</span></a>
+    <a class="bottom-item" href="#films" data-view="films"><span class="bottom-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v4m5-4v4m5-4v4M7 16v4m5-4v4m5-4v4M3 9h18"/></svg></span><span>فلم</span></a>
+    <a class="bottom-item" href="#drama" data-view="drama"><span class="bottom-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5c3-2 6-.5 7 1v11c-1.5-1.5-4.5-2-7-1zM20 5.5c-3-2-6-.5-7 1v11c1.5-1.5 4.5-2 7-1z"/><path d="M7 10h1m8 0h1M7 13c1 .8 2 .8 3 0m4 0c1 .8 2 .8 3 0"/></svg></span><span>دراما</span></a>
+    <a class="bottom-item live-nav" href="#live" data-view="live"><span class="bottom-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2"/><path d="M12 1v2m0 18v2"/></svg></span><span>لایڤ</span></a>
+    <a class="bottom-item" href="#saved" data-view="saved"><span class="bottom-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 8.8c0 5.1-8.8 11-8.8 11s-8.8-5.9-8.8-11a4.8 4.8 0 0 1 8.8-2.6 4.8 4.8 0 0 1 8.8 2.6Z"/></svg></span><span>بژاردە</span></a>
+    <a class="bottom-item" href="#settings" data-view="settings"><span class="bottom-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42"/><circle cx="12" cy="12" r="5"/></svg></span><span>سیتنگ</span></a>
+    <button class="bottom-item admin-entry" id="admin-entry" type="button" hidden aria-label="Admin"><span
+        class="bottom-icon">♙</span><span>Admin</span></button>
+  </nav>
+  <dialog id="movie-dialog" class="movie-dialog"><button class="dialog-close" id="dialog-close"
+      aria-label="گرتن">×</button>
+    <div class="dialog-art" id="dialog-art"></div>
+    <div class="dialog-info">
+      <div class="eyebrow gold" id="dialog-genre"></div>
+      <h2 id="dialog-title"></h2>
+      <div class="dialog-meta" id="dialog-meta"></div>
+      <p id="dialog-description"></p>
+      <div id="episode-list"></div>
+      <p id="source-hint" class="source-hint">ناڤەرۆکێ نموونەییە؛ ژ بۆ پەخشکرنێ سەرچاوەیەکا ڤیدیۆیێ مۆڵەتپێدراو زێدە
+        بکە.</p><button class="button button-light" id="detail-play">▶ &nbsp;پەخشکرن</button><video id="video-player"
+        controls playsinline preload="metadata" hidden></video><button class="button button-ghost" id="dialog-save">♡
+        &nbsp;زێدەکرن بۆ بژاردەیان</button>
+    </div>
+  </dialog>
+  <dialog id="profile-dialog" class="profile-dialog">
+    <div class="profile-account">
+      <button class="dialog-close" id="profile-close" type="button" aria-label="گرتن">×</button>
+      <div class="profile-hero"><span class="profile-preview avatar" id="profile-preview" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg></span><div><div class="eyebrow gold">MILLION · PROFILE</div><h2>هەژمار و پڕۆفایل</h2><p>هەژمارا خۆ دروست بکە؛ ناڤ و پڕۆفایلا تە دێ دپارێزرێت.</p></div></div>
+      <section class="account-auth" aria-labelledby="account-auth-title">
+        <div class="account-profile-details" id="account-profile-details" hidden>
+          <h3 id="account-profile-name"></h3>
+          <p id="account-profile-email"></p>
+          <p id="account-entitlement">اشتراک چالاک نینە.</p>
+        </div>
+        <p id="account-status" aria-live="polite">هەژمار نەهاتە گرێدان.</p>
+        <form id="account-email-form" novalidate>
+          <label id="account-name-field">ناڤ و نازناڤ<input id="account-name" name="name" type="text" maxlength="80" autocomplete="name" placeholder="ناڤێ تە"></label>
+          <label>ئیمەیڵ<input id="account-email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="name@example.com" required></label>
+          <label>وشەیا نهێنی<input id="account-password" name="password" type="password" minlength="8" autocomplete="new-password" placeholder="لانیکەم ٨ پیت" required></label>
+          <button class="account-signin" id="account-email-submit" type="submit">هەژمارا نوی دروست بکە</button>
+        </form>
+        <button class="account-mode-toggle" id="account-mode-toggle" type="button">هەژمارا تە هەیە؟ بچۆ ژوور</button>
+        <button class="account-signin" id="account-google" type="button">ب Google / Gmail بچۆ ژوور</button>
+        <button class="account-signin" id="account-apple" type="button">ب Apple بچۆ ژوور</button>
+        <button class="account-signout" id="account-signout" type="button" hidden>دەرکەڤتن ژ هەژمارێ</button>
+        <small id="account-setup-note">دروستکرنا هەژمار ب ئیمەیڵ، Google/Gmail یان Apple.</small>
+      </section>
+    </div>
+  </dialog>
+  <dialog id="admin-lock" class="profile-dialog">
+    <form id="admin-lock-form"><button class="dialog-close" type="button" id="admin-lock-close"
+        aria-label="گرتن">×</button>
+      <div class="eyebrow gold">MILLION · ADMIN</div>
+      <h2>رمزێ Admin بنڤیسە</h2><label>رمز<input id="admin-pin" type="password" inputmode="numeric"
+          autocomplete="current-password" autofocus required></label>
+      <p class="settings-pin-error" id="admin-pin-error" hidden>رمز نەراستە. جارەکا دی تاقی بکە.</p><button
+        class="button button-light" type="submit">چوونە ژوور</button>
+    </form>
+  </dialog>
+  <dialog id="contact-dialog" class="profile-dialog">
+    <form method="dialog" id="contact-form"><button class="dialog-close" type="button" aria-label="گرتن">×</button>
+      <div class="eyebrow gold">MILLION</div>
+      <h2>پەیوەندی</h2><label>ناڤ<input id="contact-name" required></label><label>ئیمەیڵ<input id="contact-email"
+          type="email" required></label><label>پەیام<textarea id="contact-message" rows="4"
+          required></textarea></label><button class="button button-light" value="send">پەیام بنێرە</button>
+    </form>
+  </dialog>
+  <dialog id="privacy-dialog" class="profile-dialog">
+    <form method="dialog"><button class="dialog-close" aria-label="گرتن">×</button>
+      <div class="eyebrow gold">MILLION</div>
+      <h2>پاراستنا نهێنیێ</h2>
+      <p>بژاردە و زانیاریێن پڕۆفایلێ ل ناڤ ئامێرێ تە دپارێزرێن. ئەڤ وەشانە سێرڤەرێ بۆ کۆمکرنا زانیاریان نینە.</p><button
+        class="button button-light">باشە</button>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="app.js"></script>
+  <script src="account-auth.js"></script>
+</body>
+
+</html>
