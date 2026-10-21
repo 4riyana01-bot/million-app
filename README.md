@@ -65,7 +65,7 @@ Email/password sign-up is intentionally unavailable until the trusted code-sendi
 
 1. Enable billing for the Firebase project if the console requires the Blaze plan for Cloud Functions, and create the default Firestore database.
 2. Create a Resend account, verify a sending domain, and choose a sender address on that domain. Do not use Resend's test sender for general users.
-3. Install the Firebase CLI, sign in, select project `million-675db`, and set the two function secrets without sharing them:
+3. Install Node.js 22 and the Firebase CLI, sign in, select project `million-675db`, and set the two function secrets without sharing them:
 
    ```sh
    npm install -g firebase-tools
@@ -83,7 +83,7 @@ Email/password sign-up is intentionally unavailable until the trusted code-sendi
    ```
 
    When prompted for `MILLION_OTP_FROM`, enter the verified Resend sender, for example `MILLION <verify@example.com>`.
-5. Deploy the Cloud Functions with Node.js 22 (the runtime configured in `firebase.json`) and install Flutter dependencies (`flutter pub get`) before building the native app, so `cloud_functions` is included.
+5. Install Flutter dependencies (`flutter pub get`) before building the native app, so `cloud_functions` is included.
 
 Until this backend and a verified sender domain are configured, email/password sign-up will show an explicit service error. Google and Apple sign-in do not use the email-code flow.
 
