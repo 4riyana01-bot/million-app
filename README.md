@@ -83,7 +83,7 @@ Email/password sign-up is intentionally unavailable until the trusted code-sendi
    ```
 
    When prompted for `MILLION_OTP_FROM`, enter the verified Resend sender, for example `MILLION <verify@example.com>`.
-5. Install Flutter dependencies (`flutter pub get`) before building the native app, so `cloud_functions` is included.
+5. Deploy the Cloud Functions with Node.js 22 (the runtime configured in `firebase.json`) and install Flutter dependencies (`flutter pub get`) before building the native app, so `cloud_functions` is included.
 
 Until this backend and a verified sender domain are configured, email/password sign-up will show an explicit service error. Google and Apple sign-in do not use the email-code flow.
 
